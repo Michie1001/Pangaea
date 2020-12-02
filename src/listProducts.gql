@@ -1,0 +1,9 @@
+query products {
+  products{
+    id
+    __typename
+    title
+    image_url
+    price (currency: USD)
+  }
+}

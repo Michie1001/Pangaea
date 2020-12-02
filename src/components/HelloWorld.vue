@@ -1,40 +1,47 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-   <!--  <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul> -->
+    <div v-for="product in products" :key="product.id" class="item">
+      <div class="product__img">
+        <!-- <img src={{product.image_url}}> -->
+      </div>
+      <p class="product__name">{{product.title}}</p>
+      <p class="product__price">
+        <span>From: </span> {{product.price}}
+      </p>
+      <button>Add to Cart</button>
+    </div>
+    <!-- <ApolloQuery :query="require('..listProducts.gql')">
+      <template v-slot="{ result: { loading, error, data } }">
+        <div v-if="data">
+          <div v-for="product in data.products" :key="product.id">
+           {{product.title}}
+          </div>
+        </div>
+      </template>
+    </ApolloQuery> -->
   </div>
 </template>
 
 <script>
+import gql from "graphql-tag";
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  apollo: {
+    products: gql`
+      query {
+        products{
+          id
+          __typename
+          title
+          image_url
+          price (currency: USD)
+        }
+      }
+    `
   }
 }
 </script>
@@ -49,10 +56,42 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
-  margin: 0 10px;
+  margin: 10px 0;
 }
 a {
   color: #42b983;
+}
+.item{
+  color: #111;
+  margin: 20px;
+  border: 1px solid #777;
+  padding: 20px;
+  display: inline-block;
+}
+.product__img{
+  width: 310px;
+  height: 170px;
+  overflow: hidden;
+  margin: 0 auto;
+  background-color: #ccc;
+}
+.product__img img{
+  width: 100%;
+  object-fit: cover;
+}
+.product__price{
+  margin: 8px 0;
+  font-weight: bold;
+}
+.product__price span{
+  font-weight: 400;
+}
+button{
+  background-color: #4b5548;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 20px;
+  font-weight: bold;
 }
 </style>
