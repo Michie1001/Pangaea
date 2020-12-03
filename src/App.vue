@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="wrapper">
+      <div id="overlay"></div>
       <nav>
         <ul>
           <li class="logo">LUMIN</li>
@@ -8,59 +9,43 @@
           <li>Learn</li>
           <li class="right-wing">Account</li>
           <li class="nav__cart">
-            <button v-on:click="navigateTo('cart')">
+            <button v-on:click="openNav()">
               View cart
             </button>
             <span class="cart__count">{{cart.length}}</span>
-            <button v-on:click="navigateTo('products')">
-              x
-            </button>
           </li>
         </ul>
-        <div>{{list.title}}</div>
         <div class="heading">
           <h1>All Products</h1>
           <h2>A 360&deg; look at Lumin</h2>
         </div>
       </nav>
+      <Products v-on:addItemToCart="addItemToCart" />
 
-      <HelloWorld msg="Lumin" v-on:addProductToList="addProductToList" />
-
-      <div v-if="page === 'cart'">
-        <Cart :cart="cart" v-on:decrementItem="decrementItem" />
+      <div id="mySidebar" class="sidebar">
+        <Cart :cart="cart" v-on:decrementItem="decrementItem" v-on:navigateTo="navigateTo" v-on:closeNav="closeNav" />
       </div>
 
-      <div v-if="page === 'products'">
-        <Products v-on:addItemToCart="addItemToCart" />
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 import Products from './components/Products.vue';
 import Cart from './components/Cart.vue';
 
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     Products,
     Cart,
   },
   data: ()=>{
     return{
-      page: 'products',
       cart: [],
-      list: []
     }
   },
   methods: {
-    addProductToList(product) {
-      this.list.push(product);
-      console.log(this.list);
-    },
     addItemToCart(product) {
       this.cart.push(product);
       console.log(this.cart);
@@ -68,14 +53,22 @@ export default {
     decrementItem(product) {
       this.cart.splice(this.cart.indexOf(product), 1);
     },
-    navigateTo(page){
-      this.page = page;
+    openNav() {
+      document.getElementById("mySidebar").style.width = "450px";
+      document.getElementById("overlay").style.display = "block";
+    },
+
+    closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("overlay").style.display = "none";
     }
   }
 }
+
 </script>
 
 <style>
+
 body{
   margin: 0;
   padding: 0;
@@ -130,6 +123,9 @@ nav .heading h2{
   font-weight: 400;
   font-size: 16px;
 }
+h3 {
+  margin: 40px 0 0;
+}
 ul {
   list-style-type: none;
   padding: 0;
@@ -144,28 +140,160 @@ a {
 .wrapper{
   background-color: #e2e6e3;
 }
-.cart-list{
+#overlay {
+  position: fixed;
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 1;
+}
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background-color: #f1f3f0;
+  overflow-x: hidden;
+  transition: 0.5s;
+}
+
+.sidebar a {
+  padding: 12px 8px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
   display: block;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: green;
+}
+
+.sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 36px;
+  margin-right: 50px;
+}
+
+.cart-list{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0 20px;
+
+  height: 100vh;
+}
+.cart-list .cart__head{
+  text-align: center;
+  position: relative;
+  width: 100%;
+}
+.cart__head h3{
+  color: #555;
+  font-weight: 400;
+  font-size: 16px;
+  margin: 20px 0;
+}
+.cart-list .list{
+  max-height: 60vh;
+  overflow-y: auto;
+  width: 100%;
+}
+.cart-list .cart__item{
+  background-color: #fff;
+  padding: 10px 30px 20px;
+  margin-bottom: 20px;
+  display: grid;
+  align-items: end;
+  justify-content: center;
+  grid-template-columns: repeat(3, 1fr);
+  font-size: 14px;
+  color: #4b5548;
+  font-weight: 500;
+}
+.cart-list .cart__item .cart__item--header{
+  grid-column-start: 1;
+  grid-column-end: -1;
+
+  display: flex;
+  justify-content: space-between;
+}
+.cart-list .cart__item .cart__item--header button{
+  background-color: #fff;
+  padding: 0;
+  color: #4b5548;
+}
+.cart-list .cart__item .quantity__buttons{
+  border: 1px solid #aaa;
+  width: 80px;
+  margin: 0 auto;
+}
+.quantity__buttons span{
+  margin: 0 10px;
+}
+.quantity__buttons button{
+  background-color: #fff;
+  color: #4b5548;
+  padding: 10px 8px;
+}
+.cart-list .product__img{
+  width: 40px;
+  height: 40px;
+}
+.cart__summary{
+  margin-top: auto;
+  border-top: 1px solid;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 10px;
+}
+.subtotal{
+  margin: 25px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cart__summary button{
+  width: 100%;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
 }
 .items{
   display: grid;
   grid-template-columns: repeat(3, 1fr);
 }
 .item{
+  color: #111;
   margin: 20px;
+  margin-bottom: 50px;
   padding: 20px;
+  width: 250px;
+  display: inline-block;
 }
 .product__img{
-  width: 310px;
-  height: 170px;
+  width: 100px;
+  height: 100px;
   overflow: hidden;
   margin: 0 auto;
-  background-color: #ccc;
 }
 .product__img img{
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+.product__name{
+  margin-top: 60px;
 }
 .product__price{
   margin: 8px 0;
@@ -181,5 +309,10 @@ button{
   border-radius: 5px;
   padding: 12px 20px;
   font-weight: bold;
+  outline: none;
+  transition: .2s ease-in-out;
+}
+button:hover{
+  background-color: #283224;
 }
 </style>
