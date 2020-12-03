@@ -1,9 +1,16 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+   
+
     <div v-for="product in products" :key="product.id" class="item">
+      <div v-bind:list="{title: product.title, price: product.price}"></div>
+      <div v-if="list != ''">
+        <button v-on:click="addProductToList(product)">Add to list</button>
+        <p>{{list}}</p>
+      </div>
+
       <div class="product__img">
-        <!-- <img src={{product.image_url}}> -->
+        <img :src="product.image_url" :alt="product.name">
       </div>
       <p class="product__name">{{product.title}}</p>
       <p class="product__price">
@@ -11,6 +18,7 @@
       </p>
       <button>Add to Cart</button>
     </div>
+
     <!-- <ApolloQuery :query="require('..listProducts.gql')">
       <template v-slot="{ result: { loading, error, data } }">
         <div v-if="data">
@@ -25,11 +33,10 @@
 
 <script>
 import gql from "graphql-tag";
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
-  },
+  props: ["list"],
   apollo: {
     products: gql`
       query {
@@ -42,6 +49,11 @@ export default {
         }
       }
     `
+  },
+  methods: {
+    addProductToList(product){
+      this.$emit('addProductToList', product);
+    }
   }
 }
 </script>
@@ -77,7 +89,8 @@ a {
 }
 .product__img img{
   width: 100%;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
 }
 .product__price{
   margin: 8px 0;
