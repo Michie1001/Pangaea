@@ -10,9 +10,9 @@
           <li class="right-wing">Account</li>
           <li class="nav__cart">
             <button v-on:click="openNav()">
-              View cart
+              View Cart
+              <span class="cart__count">( {{cart.length}} )</span>
             </button>
-            <span class="cart__count">{{cart.length}}</span>
           </li>
         </ul>
         <div class="heading">
@@ -23,7 +23,7 @@
       <Products v-on:addItemToCart="addItemToCart" />
 
       <div id="mySidebar" class="sidebar">
-        <Cart :cart="cart" v-on:decrementItem="decrementItem" v-on:navigateTo="navigateTo" v-on:closeNav="closeNav" />
+        <Cart :cart="cart" v-on:decrementItem="decrementItem" v-on:closeNav="closeNav" />
       </div>
 
     </div>
@@ -55,12 +55,14 @@ export default {
     },
     openNav() {
       document.getElementById("mySidebar").style.width = "450px";
+      document.getElementById("mySidebar").style.opacity = "1";
       document.getElementById("overlay").style.display = "block";
     },
 
     closeNav() {
       document.getElementById("mySidebar").style.width = "0";
-        document.getElementById("overlay").style.display = "none";
+      document.getElementById("mySidebar").style.opacity = "0";
+      document.getElementById("overlay").style.display = "none";
     }
   }
 }
@@ -111,6 +113,11 @@ nav ul .logo:hover{
 nav ul .right-wing{
   margin-left: auto;
 }
+.nav ul .nav__cart{
+ background-color: green;
+ color: #fff;
+ font-weight: bold;
+}
 nav .heading{
   padding: 20px 100px 50px;
   text-align: left;
@@ -135,7 +142,7 @@ li {
   margin: 10px 0;
 }
 a {
-  color: #42b983;
+  text-decoration: none;
 }
 .wrapper{
   background-color: #e2e6e3;
@@ -160,8 +167,9 @@ a {
   top: 0;
   right: 0;
   background-color: #f1f3f0;
+  opacity: 0;
   overflow-x: hidden;
-  transition: 0.5s;
+  transition: 0.5s all ease-in-out;
 }
 
 .sidebar a {
