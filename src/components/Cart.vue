@@ -11,11 +11,11 @@
         <div v-for="(product, index) in cart" :key="index" class="cart__item">
           <div class="cart__item--header">
             <p>{{product.title}}</p>
-            <button v-on:click="decrementItem(product)">X</button>
+            <button v-on:click="deleteItem(product)">X</button>
           </div>
           <div class="quantity__buttons">
             <button v-on:click="decrementItem(product)">-</button>
-            <span>1</span>
+            <span>{{productQuantity}}</span>
             <button v-on:click="incrementItem(product)">+</button>
           </div>
           <p>
@@ -39,10 +39,11 @@
 
 <script>
 export default {
-  props: ["cart", "sum"],
+  name: 'Cart',
+  props: ["cart", "sum", "productQuantity"],
   methods: {
-    decrementItem(index) {
-      this.$emit('decrementItem',index);
+    deleteItem(index) {
+      this.$emit('deleteItem',index);
     },
     closeNav() {
       this.$emit('closeNav');
