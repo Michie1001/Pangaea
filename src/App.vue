@@ -21,10 +21,10 @@
         </div>
       </nav>
 
-      <Products v-on:addItemToCart="addItemToCart" v-on:openNav="openNav"/>
+      <Products v-on:addItemToCart="addItemToCart" v-on:openNav="openNav" />
 
       <div id="mySidebar" class="sidebar">
-        <Cart :cart="cart" v-on:deleteItem="deleteItem" v-on:closeNav="closeNav" :sum="sum" :itemQuantity="itemQuantity" :productQuantity="productQuantity" />
+        <Cart :cart="cart" v-on:deleteItem="deleteItem" v-on:closeNav="closeNav" :sum="sum" :productQuantity="productQuantity" />
       </div>
 
     </div>
@@ -44,14 +44,58 @@ export default {
   data: ()=>{
     return{
       cart: [],
+      // obj: [],
+      // pool: [],
       sum: 0,
       cartQuantity: 0,
-      productQuantity: 1,
+      productQuantity: 0,
     }
   },
   methods: {
     addItemToCart(product) {
-      this.cart.indexOf(product) === -1 ? this.cart.push(product) : this.productQuantity += 1;
+      // var obj = {};
+      // var items = [];
+      // this.pool.push(product);
+
+      // obj.Additem = function(pool, productQuantity){
+      //   var item = {};
+      //   items.name = pool.title;
+      //   items.quantity = productQuantity;
+      //   items.price = pool.price;
+      //   items.push(item);
+      // };
+      // obj.GetAllItems = function(){
+      //   return items;
+      // };
+      // obj.getItemsByName = function(item) {
+      //   for(var i = 0; i < items.length; i++){
+      //     if(items[i].name === item){
+      //       return item[i];
+      //     }
+      //   }
+      //   return null;
+      // };
+      // obj.CalcTotal = function(){
+      //   var sum = 0;
+      //   for(var i = 0; i < items.length; i++){
+      //     sum += (items[i].quantity * items[i].price);
+      //   }
+      //   return sum;
+      // }
+      // return obj;
+      // // console.log(obj);
+
+
+      if (this.cart.indexOf(product) === -1) { //this checks if the cart has similar items and avoids repetition
+        this.cart.push(product);
+      }
+
+      for(var i = 0; i < this.cart.length; i++){
+        if (this.cart[i] === product.name) {
+          this.productQuantity++; //this is supposed to increment the quantity of each product put in the cart
+        }
+        console.log (this.productQuantity);
+      }
       // this.cart.push(product);
       this.cartQuantity += 1;
 
@@ -60,6 +104,7 @@ export default {
     deleteItem(product) {
       this.cart.splice(this.cart.indexOf(product), 1);
       this.sum -= product.price;
+      this.cartQuantity -= 1;
     },
     openNav() {
       document.getElementById("mySidebar").style.width = "450px";
