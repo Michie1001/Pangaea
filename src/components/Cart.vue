@@ -29,7 +29,7 @@
       <div class="cart__summary">
         <div class="subtotal">
           <span>Subtotal</span>
-          <span>900</span>
+          <span>${{sum}}</span>
         </div>
         <button>Proceed to Checkout</button>
       </div>
@@ -39,7 +39,7 @@
 
 <script>
 export default {
-  props: ["cart"],
+  props: ["cart", "sum"],
   methods: {
     decrementItem(index) {
       this.$emit('decrementItem',index);

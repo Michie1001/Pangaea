@@ -23,7 +23,8 @@
       <Products v-on:addItemToCart="addItemToCart" />
 
       <div id="mySidebar" class="sidebar">
-        <Cart :cart="cart" v-on:decrementItem="decrementItem" v-on:closeNav="closeNav" />
+        <Cart :cart="cart" v-on:decrementItem="decrementItem" v-on:closeNav="closeNav" :sum="sum"/>
+        <p>{{sum}}</p>
       </div>
 
     </div>
@@ -43,15 +44,19 @@ export default {
   data: ()=>{
     return{
       cart: [],
+      sum: 0
     }
   },
   methods: {
     addItemToCart(product) {
       this.cart.push(product);
-      console.log(this.cart);
+      this.sum += product.price;
+      console.log(this.sum);
     },
     decrementItem(product) {
       this.cart.splice(this.cart.indexOf(product), 1);
+      this.sum -= product.price;
+      console.log(this.sum);
     },
     openNav() {
       document.getElementById("mySidebar").style.width = "450px";
