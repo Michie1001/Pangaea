@@ -14,9 +14,9 @@
             <button v-on:click="deleteItem(product)">X</button>
           </div>
           <div class="quantity__buttons">
-            <button v-on:click="decrementItem(product)">-</button>
+            <button v-on:click="decrementItem(index)">-</button>
             <span>{{productQuantity}}</span>
-            <button v-on:click="incrementItem(product)">+</button>
+            <button v-on:click="incrementItem(index)">+</button>
           </div>
           <p>
             ${{product.price}}.00
